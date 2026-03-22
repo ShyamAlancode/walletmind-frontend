@@ -127,7 +127,7 @@ export default function WalletMind() {
           {loading && (
             <div className="analyzing-status">
               <div className="spinner-mini"></div>
-              <span>Analyzing {wallet.substring(0, 10)}...</span>
+              <span>ANALYZING {wallet.substring(0, 10)}...</span>
             </div>
           )}
           <div className="testnet-indicator">
@@ -164,28 +164,28 @@ export default function WalletMind() {
             <label className="section-label">PORTFOLIO SNAPSHOT</label>
             <div className="stat-cards-grid">
               <StatCard 
-                label="HBAR" 
+                label="HBAR BALANCE" 
                 value={walletData ? `${walletData.hbar_balance.toLocaleString()} ℏ` : "—"} 
-                subtext={walletData ? `~$${(walletData.hbar_balance * 0.1).toFixed(2)}` : ""}
-                color="indigo"
+                color="hbar"
+                active={!!walletData}
               />
               <StatCard 
-                label="TOKENS" 
-                value={walletData ? `${walletData.token_count}` : "—"} 
-                subtext="Assets"
-                color="emerald"
+                label="TOTAL ASSETS" 
+                value={walletData ? `${walletData.token_count} assets` : "—"} 
+                color="token"
+                active={!!walletData}
               />
               <StatCard 
-                label="ACTIVITY" 
-                value={walletData ? `${walletData.tx_count_30d}` : "—"} 
-                subtext="30D Txs"
-                color="blue"
+                label="30D ACTIVITY" 
+                value={walletData ? `${walletData.tx_count_30d} TXs` : "—"} 
+                color="activity"
+                active={!!walletData}
               />
             </div>
           </section>
 
           <section className="token-list-section">
-            <label className="section-label">TOP ASSETS</label>
+            <label className="section-label">KEY ASSETS</label>
             <div className="token-list">
               {walletData?.tokens && walletData.tokens.length > 0 ? (
                 walletData.tokens.slice(0, 5).map(t => (
@@ -224,7 +224,7 @@ export default function WalletMind() {
                 disabled={loading || !isValidWallet}
                 className={`analyze-btn ${loading ? 'loading' : ''} ${isValidWallet && !loading ? 'active' : ''}`}
               >
-                {loading ? "PRODUCING LOGS..." : "ANALYZE NOW"}
+                {loading ? "PRODUCING LOGS..." : "ANALYZE NOW →"}
               </button>
             </div>
             <div className="chat-meta">
@@ -255,7 +255,7 @@ export default function WalletMind() {
           </section>
 
           <section className="quick-qs-section">
-            <label className="section-label">RECOMMENDED QUERIES</label>
+            <label className="section-label">TERMINAL QUERIES</label>
             <div className="pill-grid">
               {["Best yield strategy?", "Risk exposure?", "SaucerSwap LP?", "DeFi opportunities?"].map(q => (
                 <button key={q} onClick={() => setQuestion(q)} className="pill-btn">
@@ -266,15 +266,15 @@ export default function WalletMind() {
           </section>
 
           {stats && (
-            <section className="stats-box">
+            <section className="network-stats-box">
               <label className="section-label">LIVE NETWORK STATS</label>
               <div className="network-stat">
                 <span className="n-val">{stats.total_analyses}</span>
-                <span className="n-lbl">Analyses</span>
+                <span className="n-lbl">ANALYSES</span>
               </div>
               <div className="network-stat">
                 <span className="n-val">{stats.hcs_messages_logged}</span>
-                <span className="n-lbl">On-chain Logs</span>
+                <span className="n-lbl">ON-CHAIN LOGS</span>
               </div>
             </section>
           )}
@@ -285,14 +285,15 @@ export default function WalletMind() {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
         :root {
-          --bg-main: #020617;
-          --bg-card: #0b1120;
-          --border: rgba(148, 163, 184, 0.1);
-          --text-main: #f1f5f9;
-          --text-dim: #94a3b8;
-          --accent-indigo: #6366f1;
-          --accent-violet: #8b5cf6;
-          --accent-emerald: #10b981;
+          --bg-main: #09090b;
+          --bg-card: rgba(255, 255, 255, 0.03);
+          --border: rgba(255, 255, 255, 0.08);
+          --text-main: #ffffff;
+          --text-dim: #a1a1aa;
+          --text-muted: #52525b;
+          --accent-violet: #7c3aed;
+          --accent-indigo: #4f46e5;
+          --accent-green: #22c55e;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -312,39 +313,38 @@ export default function WalletMind() {
 
         .main-header {
           height: 64px;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
           padding: 0 24px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: rgba(2, 6, 23, 0.8);
-          backdrop-filter: blur(8px);
+          background: var(--bg-main);
           z-index: 100;
         }
 
-        .logo-section { display: flex; alignItems: center; gap: 12px; }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
         .logo-mark {
-          width: 36px; height: 36px; border-radius: 8px;
-          background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+          width: 32px; height: 32px; border-radius: 4px;
+          background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
           display: flex; align-items: center; justify-content: center;
-          font-weight: 800; color: white; font-size: 20px;
-          box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+          font-weight: 800; color: white; font-size: 18px;
         }
 
-        .brand-name { font-size: 16px; font-weight: 700; letter-spacing: 0.05em; color: #fff; }
-        .brand-tagline { font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; }
+        .brand-name { font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #fff; }
+        .brand-tagline { font-size: 9px; color: var(--text-muted); letter-spacing: 0.1em; }
 
         .status-section { display: flex; align-items: center; gap: 20px; }
         .analyzing-status {
           display: flex; align-items: center; gap: 8px;
-          color: var(--accent-indigo); font-size: 11px; font-weight: 600;
+          color: var(--accent-violet); font-size: 10px; font-weight: 700;
+          letter-spacing: 0.05em;
         }
 
         .testnet-indicator {
           display: flex; align-items: center; gap: 8px;
-          background: rgba(16, 185, 129, 0.1); padding: 4px 10px;
-          border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2);
-          font-size: 10px; font-weight: 700; color: #34d399;
+          background: rgba(34, 197, 94, 0.1); padding: 4px 12px;
+          border-radius: 4px; border: 1px solid rgba(34, 197, 94, 0.3);
+          font-size: 10px; font-weight: 700; color: var(--accent-green);
         }
 
         .layout-grid {
@@ -358,158 +358,157 @@ export default function WalletMind() {
           padding: 24px;
           border-right: 1px solid var(--border);
           overflow-y: auto;
-          background: #030712;
+          background: var(--bg-main);
         }
         .right-sidebar { border-right: none; border-left: 1px solid var(--border); }
 
         .section-label {
           display: block; font-size: 10px; font-weight: 700;
-          color: var(--text-dim); letter-spacing: 0.15em; margin-bottom: 12px;
+          color: var(--text-muted); letter-spacing: 0.15em; margin-bottom: 16px;
+          text-transform: uppercase;
         }
 
         .input-group { margin-bottom: 32px; }
         .input-wrapper { position: relative; }
         .wallet-input {
-          width: 100%; background: #0f172a; border: 1px solid #1e293b;
-          border-radius: 10px; padding: 14px 16px; color: #fff;
-          font-family: 'JetBrains Mono', monospace; font-size: 14px;
+          width: 100%; background: #111113; border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px; padding: 12px 14px; color: #fff;
+          font-family: 'JetBrains Mono', monospace; font-size: 13px;
           transition: all 0.2s; outline: none;
         }
-        .wallet-input:focus { border-color: var(--accent-indigo); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .wallet-input:focus { border-color: var(--accent-violet); }
         .wallet-input.invalid { border-color: #ef4444; }
-        .wallet-input.valid { border-color: var(--accent-emerald); }
+        .wallet-input.valid { border-color: var(--accent-green); }
         .valid-check {
-          position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-          color: var(--accent-emerald); font-weight: 700;
+          position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+          color: var(--accent-green); font-size: 12px;
         }
 
-        .input-hint { font-size: 10px; color: var(--text-dim); margin-top: 8px; }
+        .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
         .input-hint.error { color: #f87171; }
 
         .stat-cards-grid { display: grid; gap: 12px; }
         .stat-card {
-          background: linear-gradient(145deg, #0f172a, #030712);
-          border: 1px solid var(--border); border-radius: 12px; padding: 16px;
-          transition: transform 0.2s;
+          background: var(--bg-card);
+          backdrop-filter: blur(12px);
+          border: 1px solid var(--border); 
+          border-left: 3px solid var(--accent-violet);
+          padding: 16px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
         }
-        .stat-card:hover { transform: translateY(-2px); border-color: rgba(148, 163, 184, 0.3); }
-        .sc-lbl { font-size: 9px; color: var(--text-dim); font-weight: 700; }
-        .sc-val { font-size: 18px; font-weight: 700; margin: 4px 0; display: block; }
-        .sc-sub { font-size: 10px; color: var(--text-dim); }
+        .stat-card.active { background: rgba(124, 58, 237, 0.05); }
+        .sc-lbl { font-size: 9px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.1em; }
+        .sc-val { font-size: 24px; font-weight: 700; margin: 4px 0; color: #fff; display: block; }
 
-        .token-list { display: flex; flex-direction: column; gap: 8px; }
+        .token-list { display: flex; flex-direction: column; gap: 4px; }
         .token-item {
-          display: flex; justify-content: space-between; padding: 8px 12px;
-          background: rgba(15, 23, 42, 0.5); border-radius: 8px; font-size: 12px;
-          border: 1px solid transparent;
+          display: flex; justify-content: space-between; padding: 10px 14px;
+          background: rgba(255, 255, 255, 0.02); border-radius: 4px; font-size: 12px;
         }
-        .token-sym { color: var(--text-dim); font-weight: 600; }
-        .token-bal { font-family: 'JetBrains Mono', monospace; }
+        .token-sym { color: var(--text-dim); }
+        .token-bal { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
 
         .chat-container {
-          display: flex; flex-direction: column; background: #020617;
+          display: flex; flex-direction: column; background: var(--bg-main);
           position: relative;
         }
 
         .messages-scroll {
-          flex: 1; overflow-y: auto; padding: 32px;
-          display: flex; flex-direction: column; gap: 24px;
+          flex: 1; overflow-y: auto; padding: 40px;
+          display: flex; flex-direction: column; gap: 32px;
         }
 
         .input-area {
-          padding: 24px 32px; border-top: 1px solid var(--border);
-          background: rgba(2, 6, 23, 0.9);
+          padding: 24px 40px; border-top: 1px solid var(--border);
+          background: var(--bg-main);
         }
 
         .chat-input-wrapper {
-          display: flex; gap: 12px; background: #0f172a;
-          padding: 8px; border-radius: 16px; border: 1px solid #1e293b;
+          display: flex; gap: 12px; background: #111113;
+          padding: 6px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .chat-input {
-          flex: 1; background: transparent; border: none; padding: 12px 16px;
-          color: #fff; font-size: 14px; outline: none;
+          flex: 1; background: transparent; border: none; padding: 10px 16px;
+          color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 13px; outline: none;
         }
+        .chat-input::placeholder { color: #3f3f46; }
+
         .analyze-btn {
-          background: var(--text-dim); color: #000; padding: 0 24px;
-          border: none; border-radius: 10px; font-weight: 700; font-size: 13px;
+          background: #27272a; color: #a1a1aa; padding: 0 24px;
+          border: none; border-radius: 6px; font-weight: 700; font-size: 12px;
           cursor: not-allowed; transition: all 0.3s; white-space: nowrap;
+          letter-spacing: 0.1em;
         }
         .analyze-btn.active {
-          background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+          background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
           color: #fff; cursor: pointer;
-          animation: btnPulse 2s infinite;
         }
-        .analyze-btn:hover.active { transform: scale(1.02); box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-
-        @keyframes btnPulse {
-          0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
-          70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        .analyze-btn.active:hover {
+          background: linear-gradient(135deg, #6d28d9, #4338ca);
+          box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
         }
 
-        .chat-meta { text-align: center; margin-top: 12px; font-size: 10px; color: var(--text-dim); }
+        .chat-meta { text-align: center; margin-top: 12px; font-size: 10px; color: var(--text-muted); }
 
-        .tool-list { display: flex; flex-direction: column; gap: 10px; }
+        .tool-list { display: flex; flex-direction: column; gap: 4px; }
         .tool-item {
-          display: flex; align-items: center; gap: 12px; padding: 10px 14px;
-          background: #0f172a; border-radius: 10px; border: 1px solid var(--border);
+          display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+          background: #000; border-left: 2px solid var(--border);
+          transition: border-color 0.2s;
         }
-        .tool-icon { font-size: 14px; }
-        .tool-name { flex: 1; font-size: 12px; font-weight: 500; }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
-        .status-dot.active { background: var(--accent-emerald); box-shadow: 0 0 4px var(--accent-emerald); }
+        .tool-item:hover { border-color: var(--accent-violet); }
+        .tool-item:hover .tool-name { color: #fff; }
+        .tool-icon { font-size: 14px; opacity: 0.7; }
+        .tool-name { flex: 1; font-size: 12px; color: var(--text-dim); transition: color 0.2s; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; opacity: 0.4; transition: opacity 0.3s; }
+        .status-dot.active { 
+          background: var(--accent-green); 
+          box-shadow: 0 0 6px var(--accent-green); 
+          opacity: 1;
+        }
 
-        .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pill-grid { display: flex; flex-wrap: wrap; gap: 6px; }
         .pill-btn {
-          background: #0f172a; border: 1px solid #1e293b; color: var(--text-dim);
-          padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 500;
+          background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: var(--text-dim);
+          padding: 6px 12px; border-radius: 4px; font-size: 11px;
           cursor: pointer; transition: all 0.2s;
         }
-        .pill-btn:hover { border-color: var(--accent-indigo); color: #fff; }
+        .pill-btn:hover { border-color: var(--accent-violet); color: #fff; background: rgba(124, 58, 237, 0.05); }
 
-        .stats-box { background: #0f172a; padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
-        .network-stat { margin-bottom: 12px; display: flex; align-items: baseline; gap: 8px; }
-        .n-val { font-size: 20px; font-weight: 800; color: #fff; }
-        .n-lbl { font-size: 10px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
-
-        .error-banner {
-          background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
-          color: #f87171; padding: 10px 16px; border-radius: 10px; font-size: 12px; margin-bottom: 12px;
+        .network-stats-box { 
+          background: #000; padding: 24px; border-radius: 4px; 
+          border-top: 2px solid var(--accent-violet);
         }
+        .network-stat { margin-bottom: 16px; display: flex; flex-direction: column; gap: 4px; }
+        .n-val { font-size: 36px; font-weight: 800; color: #fff; line-height: 1; }
+        .n-lbl { font-size: 10px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; }
 
+        @keyframes spin { to { transform: rotate(360deg); } }
         .spinner-mini {
-          width: 14px; height: 14px; border: 2px solid rgba(99, 102, 241, 0.1);
-          border-top-color: var(--accent-indigo); border-radius: 50%;
+          width: 12px; height: 12px; border: 2px solid rgba(124, 58, 237, 0.1);
+          border-top-color: var(--accent-violet); border-radius: 50%;
           animation: spin 0.8s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .pulse-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .pulse-dot.green { background: #22c55e; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
-
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
         @media (max-width: 1024px) {
           .layout-grid { grid-template-columns: 1fr; overflow-y: auto; }
           .sidebar, .chat-container { height: auto; overflow: visible; border: none; border-bottom: 1px solid var(--border); }
-          .chat-container { min-height: 500px; }
         }
       `}</style>
     </div>
   );
 }
 
-function StatCard({ label, value, subtext, color }: { label: string; value: string; subtext: string; color: string }) {
-  const c = color === 'indigo' ? '#6366f1' : color === 'emerald' ? '#10b981' : '#3b82f6';
+function StatCard({ label, value, color, active }: { label: string; value: string; color: string; active: boolean }) {
   return (
-    <div className="stat-card">
+    <div className={`stat-card ${active ? 'active' : ''}`}>
       <span className="sc-lbl">{label}</span>
-      <span className="sc-val" style={{ color: c }}>{value}</span>
-      <span className="sc-sub">{subtext}</span>
+      <span className="sc-val">{value}</span>
     </div>
   );
 }
@@ -522,11 +521,9 @@ function MessageBubble({ message }: { message: Message }) {
     <div className="system-msg-wrap">
       <div className="system-msg">{message.content}</div>
       <style jsx>{`
-        .system-msg-wrap { display: flex; justify-content: center; margin-bottom: 8px; }
+        .system-msg-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
         .system-msg {
-          background: rgba(15, 23, 42, 0.5); padding: 6px 16px; border-radius: 20px;
-          border: 1px solid var(--border); font-size: 11px; color: var(--text-dim);
-          text-align: center; max-width: 80%;
+          color: #3f3f46; font-size: 13px; text-align: center; max-width: 90%;
         }
       `}</style>
     </div>
@@ -542,8 +539,8 @@ function MessageBubble({ message }: { message: Message }) {
 
         {!isUser && message.agentSteps !== undefined && message.agentSteps > 0 && (
           <div className="agent-badge">
-            <div className={`dot pulse`}></div>
-            AI used {message.agentSteps} Hedera tools
+            <div className="dot"></div>
+            AI used {message.agentSteps} local tools
           </div>
         )}
 
@@ -553,13 +550,8 @@ function MessageBubble({ message }: { message: Message }) {
               <div className="hcs-dot"></div>
               <span>LOGGED ON HEDERA</span>
             </div>
-            <a 
-              href={`https://hashscan.io/testnet/transaction/${message.txHash}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hcs-link"
-            >
-              HCS Hash: {message.txHash.substring(0, 16)}...
+            <a href={`https://hashscan.io/testnet/transaction/${message.txHash}`} target="_blank" rel="noopener noreferrer" className="hcs-link">
+              {message.txHash.substring(0, 16)}...
             </a>
           </div>
         )}
@@ -571,7 +563,7 @@ function MessageBubble({ message }: { message: Message }) {
               <span>STRATEGY SCHEDULED</span>
             </div>
             <a href={`https://hashscan.io/testnet/schedule/${message.scheduleId}`} target="_blank" rel="noopener noreferrer" className="sch-link">
-              Schedule {message.scheduleId}
+              {message.scheduleId}
             </a>
           </div>
         )}
@@ -582,90 +574,76 @@ function MessageBubble({ message }: { message: Message }) {
       </div>
 
       <style jsx>{`
-        .message-bubble-wrap { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.4s ease-out; }
+        .message-bubble-wrap { display: flex; gap: 16px; max-width: 90%; animation: fadeIn 0.4s ease-out; }
         .message-bubble-wrap.user { align-self: flex-end; flex-direction: row-reverse; }
         .message-bubble-wrap.assistant { align-self: flex-start; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
         .msg-avatar {
-          width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
-          background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+          width: 28px; height: 28px; border-radius: 4px; flex-shrink: 0;
+          background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
           display: flex; align-items: center; justify-content: center;
           font-weight: 800; color: white; font-size: 14px; margin-top: 4px;
         }
 
-        .message-content-box {
-          display: flex; flex-direction: column; gap: 8px;
-        }
+        .message-content-box { display: flex; flex-direction: column; gap: 8px; }
 
         .message-text {
-          padding: 16px 20px; border-radius: 12px; font-size: 14px; line-height: 1.6;
+          padding: 16px 24px; border-radius: 12px; font-size: 14px; line-height: 1.7;
+          background: var(--bg-card); backdrop-filter: blur(12px);
+          border: 1px solid var(--border);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
-        .user .message-text {
-          background: #1e1b4b; color: #c7d2fe; border: 1px solid #312e81;
-          border-bottom-right-radius: 2px;
-        }
-
-        .assistant .message-text {
-          background: #0f172a; color: #cbd5e1; border: 1px solid #1e293b;
-          border-top-left-radius: 2px;
-        }
+        .user .message-text { background: rgba(124, 58, 237, 0.1); border-color: rgba(124, 58, 237, 0.2); }
 
         .agent-badge {
           display: flex; align-items: center; gap: 6px;
-          font-size: 10px; color: var(--accent-indigo); font-weight: 600;
+          font-size: 10px; color: var(--accent-violet); font-weight: 700;
+          letter-spacing: 0.05em; margin-top: 4px;
         }
         .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-        .dot.pulse { animation: pulse 1.5s infinite; }
 
-        .message-meta { font-size: 9px; color: var(--text-dim); }
+        .message-meta { font-size: 9px; color: var(--text-muted); }
         .user .message-meta { text-align: right; }
 
         /* Badge Styles */
         .hcs-badge, .schedule-badge {
-          margin-top: 4px; padding: 10px 14px; border-radius: 10px;
-          display: flex; flex-direction: column; gap: 4px;
+          margin-top: 4px; padding: 10px 14px; border-radius: 6px;
+          display: flex; align-items: center; gap: 12px;
+          background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border);
         }
 
-        .hcs-badge { background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); }
-        .hcs-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; color: #22c55e; letter-spacing: 0.05em; }
-        .hcs-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
-        .hcs-link { font-size: 10px; color: #64748b; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
-        .hcs-link:hover { color: var(--accent-indigo); }
-
-        .schedule-badge { background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); }
-        .sch-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; color: #f59e0b; }
+        .hcs-header, .sch-header { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; }
+        .hcs-header { color: var(--accent-green); }
+        .hcs-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
+        
+        .sch-header { color: #f59e0b; }
         .sch-dot { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; }
-        .sch-link { font-size: 10px; color: #64748b; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+
+        .hcs-link, .sch-link { font-size: 10px; color: var(--text-muted); text-decoration: none; font-family: 'JetBrains Mono', monospace; }
+        .hcs-link:hover, .sch-link:hover { color: #fff; }
       `}</style>
     </div>
   );
 }
 
 function AssistantMarkdown({ content }: { content: string }) {
-  // Simple markdown-style renderer
   const lines = content.split('\n');
   return (
     <div className="md-rendered">
       {lines.map((line, i) => {
-        if (line.startsWith('## ')) {
-          return <h2 key={i}>{line.substring(3)}</h2>;
-        }
-        if (line.startsWith('### ')) {
-          return <h3 key={i}>{line.substring(4)}</h3>;
-        }
-        if (line.startsWith('- ') || line.startsWith('* ')) {
-          return <li key={i}>{line.substring(2)}</li>;
-        }
+        if (line.startsWith('## ')) return <h2 key={i}>{line.substring(3)}</h2>;
+        if (line.startsWith('### ')) return <h3 key={i}>{line.substring(4)}</h3>;
+        if (line.startsWith('- ') || line.startsWith('* ')) return <li key={i}>{line.substring(2)}</li>;
         return <p key={i}>{line}</p>;
       })}
       <style jsx>{`
-        .md-rendered h2 { font-size: 16px; font-weight: 700; margin: 16px 0 8px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-        .md-rendered h3 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: var(--accent-indigo); }
-        .md-rendered p { margin-bottom: 10px; }
-        .md-rendered li { margin: 4px 0 4px 16px; list-style-type: circle; }
+        .md-rendered h2 { font-size: 15px; font-weight: 700; margin: 20px 0 10px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+        .md-rendered h3 { font-size: 13px; font-weight: 700; margin: 16px 0 8px; color: var(--accent-violet); text-transform: uppercase; letter-spacing: 0.05em; }
+        .md-rendered p { margin-bottom: 12px; }
+        .md-rendered li { margin: 6px 0 6px 16px; list-style-type: circle; }
       `}</style>
     </div>
   );
@@ -677,23 +655,24 @@ function TypingIndicator() {
       <div className="msg-avatar">W</div>
       <div className="typing-bubble">
         <div className="dot-pulse"></div>
-        <span>AI is thinking...</span>
+        <span>Thinking...</span>
       </div>
       <style jsx>{`
-        .typing-wrap { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+        .typing-wrap { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; }
         .typing-bubble {
-          background: #0f172a; border: 1px solid #1e293b; padding: 12px 20px;
-          border-radius: 2px 12px 12px 12px; display: flex; align-items: center; gap: 12px;
+          background: var(--bg-card); border: 1px solid var(--border); padding: 12px 20px;
+          border-radius: 12px; display: flex; align-items: center; gap: 12px;
           color: var(--text-dim); font-size: 12px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.4);
         }
         .dot-pulse {
-          width: 8px; height: 8px; border-radius: 50%; background: var(--accent-indigo);
-          box-shadow: 0 0 10px var(--accent-indigo); animation: blink 1.2s infinite;
+          width: 6px; height: 6px; border-radius: 50%; background: var(--accent-violet);
+          animation: blink 1.2s infinite;
         }
-        @keyframes blink { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.1); } }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
         .msg-avatar {
-          width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
-          background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
+          width: 28px; height: 28px; border-radius: 4px; flex-shrink: 0;
+          background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
           display: flex; align-items: center; justify-content: center;
           font-weight: 800; color: white; font-size: 14px;
         }
