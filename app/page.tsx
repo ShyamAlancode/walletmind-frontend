@@ -82,7 +82,10 @@ export default function WalletMind() {
       const res = await fetch(`${API_URL}/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet_address: addr, question: q }),
+        body: JSON.stringify({ 
+          wallet_address: addr, 
+          question: q 
+        }),
       });
       if (!res.ok) { const e = await res.json(); throw new Error(e.detail || "Analysis failed"); }
       const data = await res.json();
