@@ -17,7 +17,7 @@ type Token = { token_id: string; symbol: string; name: string; balance: number; 
 
 type WalletData = {
   account_id: string; hbar_balance: number; tokens: Token[];
-  token_count: number; tx_count_30d: number; evm_address: string;
+  token_count: number; tx_count_30d: number; txCount30d?: number; evm_address: string;
 };
 
 type Stats = {
@@ -147,9 +147,25 @@ export default function WalletMind() {
             </section>
 
             <section className="stats-section">
-              <SidebarStat label="HBAR BALANCE" value={walletData ? `${walletData.hbar_balance.toLocaleString()}` : "—"} suffix="ℏ" subValue={walletData ? `$${(walletData.hbar_balance * 0.1).toFixed(2)} USD` : ""} />
-              <SidebarStat label="TOTAL ASSETS" value={walletData ? `${walletData.token_count}` : "—"} suffix="assets" subValue={walletData ? "Tokens & NFTs" : ""} />
-              <SidebarStat label="30D ACTIVITY" value={walletData ? `${walletData.tx_count_30d}` : "—"} suffix="TXs" subValue={walletData ? "Recent movements" : ""} />
+              <SidebarStat 
+                label="HBAR BALANCE" 
+                value={walletData ? walletData.hbar_balance.toLocaleString() : "—"} 
+                suffix="ℏ" 
+                subValue={walletData ? `$${(walletData.hbar_balance * 0.065).toFixed(2)} USD` : ""} 
+                empty={!walletData}
+              />
+              <SidebarStat 
+                label="TOTAL ASSETS" 
+                value={walletData ? `${walletData.token_count}` : "0"} 
+                suffix="tokens" 
+                empty={!walletData}
+              />
+              <SidebarStat 
+                label="30D ACTIVITY" 
+                value={walletData ? `${walletData?.tx_count_30d ?? walletData?.txCount30d ?? 0}` : "0"} 
+                suffix="transactions" 
+                empty={!walletData}
+              />
             </section>
 
             {walletData?.tokens && walletData.tokens.length > 0 && (
@@ -183,13 +199,13 @@ export default function WalletMind() {
         <main className="saas-content">
           {!hasMessages && !loading ? (
             <div className="hero-state">
-              <div className="hero-logo">W</div>
-              <h2 className="hero-title">Paste a wallet address</h2>
-              <p className="hero-subtitle">Get AI-powered DeFi insights with every analysis logged on Hedera</p>
-              <div className="hero-chips">
-                <div className="hero-chip">● Live on Hedera Testnet</div>
-                <div className="hero-chip">● Groq LLaMA 3.3 70B</div>
-                <div className="hero-chip">● HCS Immutable Logs</div>
+              <div className="hero-logo-glowing">W</div>
+              <h2 className="hero-title-new">Paste a wallet address to begin</h2>
+              <p className="hero-subtitle-new">Every analysis is permanently logged on Hedera Consensus Service</p>
+              <div className="hero-pills">
+                <div className="hero-pill">● MIRROR NODE LIVE</div>
+                <div className="hero-pill">● GROQ 3.3 70B</div>
+                <div className="hero-pill">● HCS IMMUTABLE</div>
               </div>
             </div>
           ) : (
@@ -220,7 +236,14 @@ export default function WalletMind() {
                     disabled={loading || !isValidWallet}
                     className={`saas-btn ${loading ? 'loading' : ''} ${isValidWallet && !loading ? 'active' : ''}`}
                   >
-                    {loading ? <Spinner /> : "ANALYZE NOW"}
+                    {loading ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="btn-spinner"></div>
+                        <span>ANALYZING...</span>
+                      </div>
+                    ) : (
+                      "ANALYZE NOW →"
+                    )}
                   </button>
                 </div>
                 <div className="dock-footer">
@@ -342,18 +365,30 @@ export default function WalletMind() {
           flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
           padding-bottom: 100px;
         }
-        .hero-logo {
+        .hero-logo-glowing {
           width: 64px; height: 64px; background: linear-gradient(135deg, #7c3aed, #4f46e5);
           border-radius: 12px; display: flex; align-items: center; justify-content: center;
           font-weight: 800; color: white; font-size: 32px; margin-bottom: 24px;
           box-shadow: 0 0 80px rgba(124,58,237,0.15);
         }
-        .hero-title { font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 8px; }
-        .hero-subtitle { font-size: 14px; color: var(--text-dim); margin-bottom: 32px; }
-        .hero-chips { display: flex; gap: 24px; }
-        .hero-chip { font-size: 11px; color: var(--text-label); font-weight: 500; }
+        .hero-title-new { font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 8px; }
+        .hero-subtitle-new { font-size: 13px; color: #525252; margin-bottom: 32px; }
+        .hero-pills { display: flex; gap: 12px; }
+        .hero-pill { 
+          background: #111; border: 1px solid #222; text-shadow: none;
+          color: #666; font-size: 11px; font-weight: 500;
+          padding: 6px 14px; border-radius: 20px;
+        }
 
-        .chat-feed { flex: 1; overflow-y: auto; padding: 48px 10%; display: flex; flex-direction: column; gap: 48px; }
+        .chat-feed { 
+          height: calc(100vh - 120px);
+          overflow-y: auto; 
+          scroll-behavior: smooth;
+          padding: 48px 10% 120px; 
+          display: flex; 
+          flex-direction: column; 
+          gap: 48px; 
+        }
 
         .bottom-dock {
           padding: 24px 10%; background: linear-gradient(to top, var(--bg-black), transparent);
@@ -396,6 +431,12 @@ export default function WalletMind() {
 
         .inline-error { color: #ef4444; font-size: 11px; padding: 0 12px 8px; }
 
+        .btn-spinner {
+          width: 14px; height: 14px; border: 2px solid transparent; 
+          border-top-color: white; border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
         @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin { to{transform:rotate(360deg)} }
@@ -416,15 +457,20 @@ export default function WalletMind() {
   );
 }
 
-function SidebarStat({ label, value, suffix, subValue }: { label: string; value: string; suffix: string; subValue?: string }) {
+function SidebarStat({ label, value, suffix, subValue, empty }: { label: string; value: string; suffix: string; subValue?: string; empty?: boolean }) {
   return (
     <div className="side-stat">
       <label className="sidebar-label">{label}</label>
       <div className="ss-val-row">
-        <span className="ss-val">{value}</span>
-        <span className="ss-suffix">{suffix}</span>
+        <span className={`ss-val ${empty ? 'empty' : ''}`}>{value}</span>
+        {!empty && <span className="ss-suffix">{suffix}</span>}
       </div>
       {subValue && <div className="ss-sub">{subValue}</div>}
+      <style jsx>{`
+        .ss-val.empty { color: #2a2a2a; font-weight: 400; }
+        .ss-val { font-size: 20px; font-weight: 700; color: #fff; line-height: 1; }
+        .ss-sub { font-size: 12px; color: #525252; margin-top: 4px; }
+      `}</style>
     </div>
   );
 }
