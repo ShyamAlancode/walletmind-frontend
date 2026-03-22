@@ -155,7 +155,7 @@ export default function WalletMind() {
             <section className="stats-section">
               <SidebarStat 
                 label="HBAR BALANCE" 
-                value={walletData ? walletData.hbar_balance.toLocaleString() : "—"} 
+                value={walletData ? (walletData.hbar_balance || 0).toLocaleString() : "—"} 
                 suffix="ℏ" 
                 subValue={walletData ? `$${(walletData.hbar_balance * 0.065).toFixed(2)} USD` : ""} 
                 empty={!walletData}
@@ -181,7 +181,7 @@ export default function WalletMind() {
                   {walletData.tokens.slice(0, 5).map(t => (
                     <div key={t.token_id} className="asset-item">
                       <span className="asset-sym">{t.symbol}</span>
-                      <span className="asset-val">{t.balance?.toLocaleString()}</span>
+                      <span className="asset-val">{(t.balance || 0).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>
@@ -219,7 +219,7 @@ export default function WalletMind() {
               {messages.slice(1).map((msg, i) => (
                 <MessageItem key={i} message={msg} />
               ))}
-              {agentEvents.length > 0 && (
+              {agentEvents && Array.isArray(agentEvents) && agentEvents.length > 0 && (
                 <AgentFeed events={agentEvents} isLoading={loading} />
               )}
               {loading && <LoadingPrompt />}
