@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import AgentFeed from "@/components/AgentFeed";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -28,6 +29,7 @@ type Stats = {
 export default function WalletMind() {
   const [wallet, setWallet] = useState("");
   const [question, setQuestion] = useState("");
+  const [agentEvents, setAgentEvents] = useState<any[]>([]);
   const [messages, setMessages] = useState<Message[]>([{
     role: "system",
     content: "WalletMind — Verifiable AI DeFi Copilot for Hedera. Personalized trading, staking, yield, and risk insights for your wallet, with every recommendation immutably logged on-chain.",
@@ -90,6 +92,7 @@ export default function WalletMind() {
       if (!res.ok) { const e = await res.json(); throw new Error(e.detail || "Analysis failed"); }
       const data = await res.json();
       setWalletData(data.wallet_data);
+      setAgentEvents(data.agent_events || []);
       setMessages(m => [...m, {
         role: "assistant",
         content: data.analysis,
@@ -216,6 +219,9 @@ export default function WalletMind() {
               {messages.slice(1).map((msg, i) => (
                 <MessageItem key={i} message={msg} />
               ))}
+              {agentEvents.length > 0 && (
+                <AgentFeed events={agentEvents} isLoading={loading} />
+              )}
               {loading && <LoadingPrompt />}
               <div ref={bottomRef} />
             </div>
@@ -256,7 +262,7 @@ export default function WalletMind() {
                   {stats && (
                     <div className="global-stats">
                       <span>{stats.total_analyses} analyses</span>
-                      <span>{stats.hcs_messages_logged} logged on-chain</span>
+                      <span>{agentEvents.filter(e => e.hcs_tx !== null).length} logged on-chain</span>
                     </div>
                   )}
                 </div>
