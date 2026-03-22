@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { Client, PrivateKey, TopicCreateTransaction, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 
 async function test() {
