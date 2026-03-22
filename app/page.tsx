@@ -30,7 +30,7 @@ export default function WalletMind() {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<Message[]>([{
     role: "system",
-    content: "WalletMind v2.0 — Autonomous DeFi Agent on Hedera. 5 real Hedera tools. Every analysis logged on-chain. Paste a wallet address to begin.",
+    content: "WalletMind — Verifiable AI DeFi Copilot for Hedera. Personalized trading, staking, yield, and risk insights for your wallet, with every recommendation immutably logged on-chain.",
     timestamp: new Date().toISOString(),
   }]);
   const [loading, setLoading] = useState(false);
@@ -115,7 +115,7 @@ export default function WalletMind() {
           <div style={{ width: 32, height: 32, borderRadius: 6, background: "linear-gradient(135deg,#6366f1,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "#fff" }}>W</div>
           <div>
             <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: "0.05em", color: "#f1f5f9" }}>WALLETMIND</div>
-            <div style={{ fontSize: 10, color: "#475569", letterSpacing: "0.1em" }}>AUTONOMOUS HEDERA DeFi AGENT</div>
+            <div style={{ fontSize: 10, color: "#475569", letterSpacing: "0.1em" }}>VERIFIABLE AI DeFi COPILOT FOR HEDERA</div>
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
@@ -215,7 +215,7 @@ export default function WalletMind() {
               </button>
             </div>
             <div style={{ fontSize: 10, color: "#334155", marginTop: 8, textAlign: "center" }}>
-              Autonomous LangChain agent · 5 real Hedera tools · Every analysis logged on-chain · Groq Llama 3.3 70B
+              Verifiable AI Copilot · 5 real Hedera tools · Every recommendation immutably logged on-chain · Groq Llama 3.3 70B
             </div>
           </div>
         </main>
